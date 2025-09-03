@@ -19,10 +19,7 @@ class CashierUpdate(SQLModel):
     location_name: str | None = None
     current_operation_state: bool = Field(default= False)
 
-
 router = APIRouter()
-
-
 
 @router.get("/cashiers-list") # Return all listed cashiers
 def list_cashiers(session: SessionDep):
@@ -30,6 +27,7 @@ def list_cashiers(session: SessionDep):
 
 @router.get("/cashiers/{cashier_id}", response_model= CashierPublic)
 def cashier_by_id(cashier_id: int, session: SessionDep)
+    #Fetch the cashier
     target_cashier = session.exec(select(Cashier).where(Cashier.id == cashier_id)).first()
     if not target_cashier :
         raise HTTPException(status_code= 404, detail="Cashier not found")
@@ -64,9 +62,12 @@ def modify_cashier(cashier_id: int,cashier: CashierUpdate, session: SessionDep):
     
     return target_cashier
 
-@router.delete("/delete-cashier/{cashier_id}", response_model= CashierPublic)
+@router.delete("/delete-cashier/{cashier_id}", response_model= CashierPublic) # Delete selected cashier from database
 def delete_cashier(casheir_id: int,session: SessionDep):
+    #Fetch the cashier
     target_cashier = session.exec(select(Cashier).where(Cashier.id == casheir_id)).first()
+
+    #Checking for excistance of data
     if not target_cashier :
         raise HTTPException(status_code= 404, detail = "Cashier not found")
     session.delete(target_cashier)
