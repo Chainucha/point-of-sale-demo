@@ -3,16 +3,17 @@ from sqlmodel import Field, Session, SQLModel, select
 from db import SessionDep
 
 
-class CashierBase(SQLModel):
+class Cashier_base(SQLModel):
     location_name: str | None = Field(default= None)
+    current_operation_state: bool | None = Field(default= False)
 
-class Cashier(CashierBase, table = True):
+class Cashier(Cashier_base, table = True):
     id: int = Field(index= True, primary_key= True)
 
-class CashierPublic(CashierBase):
+class CashierPublic(Cashier_base):
     id: int
 
-class CashierCreate(CashierBase):
+class CashierCreate(Cashier_base):
     pass
 
 class CashierUpdate(SQLModel):

@@ -58,3 +58,28 @@ def add_menu(new_menu: MenuListCreate, session: SessionDep):
     session.refresh()
 
     return {"message": "success", "menu": new_menu}
+
+@router.put("/modify-menu/{menu_id}")
+def modify_menu(menu_id: int, session: SessionDep)
+    statement = session.exec(select(MenuList).where(MenuList.id == menu_id))
+    if not statement:
+        raise HTTPException(status_code=404, detail= "Menu not found")
+    menu_data = statement.model_dump(exclude_unset=True)
+    for key, value in menu_data.items():
+        setattr(menu_data, key, value)
+    
+    session.add(menu_data)
+    session.commit()
+    session.refresh(menu_data)
+    
+    return menu_data
+
+@router.delete("/delete-menu/{menu_id}")
+def delete_menu(menu_id: int, session: SessionDep)
+    statement = session.exec(select(MenuList).where(MenuList.id == menu_id))
+    if not statement:
+        raise HTTPException(status_code=404, detail="Menu not found")
+    session.delete(statement)
+    session.commit()
+    return {"Message" : "Success",
+            "deleted_cashier" : statement}
