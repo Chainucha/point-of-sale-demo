@@ -1,0 +1,123 @@
+import java.io.*;
+public class DVR
+{
+static int graph[][];
+static int via[][];
+static int rt[][];
+static int v;
+static int e;
+public static void main(String[] args) throws IOException
+{
+BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+System.out.print("Enter the number of vertices:");
+v=Integer.parseInt(br.readLine());
+System.out.print("Enter the number of edges:");
+e=Integer.parseInt(br.readLine());
+graph=new int[v][v];
+via=new int[v][v];
+rt=new int[v][v];
+for(int i=0;i<v;i++)
+for(int j=0;j<v;j++)
+{
+if (i==j)
+graph[i][j]=0;
+else graph[i][j]=99;
+}
+for(int i=0;i<e;i++)
+{
+System.out.println("Enter data for edge"+(i+1)+":");
+System.out.print("source:");
+int s=Integer.parseInt(br.readLine());
+s--;
+System.out.print("Destination:");
+int d=Integer.parseInt(br.readLine());
+d--;
+System.out.print("cost:");
+int c=Integer.parseInt(br.readLine());
+graph[s][d]=c;
+graph[d][s]=c;
+}
+System.out.println("The original routing table is given below\n");
+for(int i=0;i<v;i++)
+{
+int k=i+1;
+System.out.print("Router"+k);
+for(int j=0;j<v;j++)
+System.out.print(" "+graph[i][j]);
+System.out.println();
+}
+dvr_calc_disp("The final routing table is given below:"); // calling the function
+} // end of main
+static void dvr_calc_disp(String message)
+{
+//System.out.println();
+int_tables();
+update_tables();
+System.out.println();
+System.out.println(message);
+print_tables();
+System.out.println();
+}
+static void update_tables(int Source)
+{
+for(int i=0;i<v;i++)
+{
+if(graph[Source][i]!=99)
+{
+int dist=graph[Source][i];
+for(int j=0;j<v;j++)
+{
+int inter_dist=rt[i][j];
+if(via[i][j]==Source)
+inter_dist=99;
+if(dist+inter_dist<rt[Source][j])
+{
+rt[Source][j]=dist+inter_dist;
+via[Source][j]=i;
+}
+}
+}
+}
+}
+static void update_tables()
+{
+int k=0;
+for(int i=0;i<4*v;i++)
+{
+update_tables(k);
+k++;
+if(k==v)
+k=0;
+}
+}
+static void int_tables()
+{
+for(int i=0;i<v;i++)
+{
+for(int j=0;j<v;j++)
+{
+if(i==j)
+{
+rt[i][j]=0;
+via[i][j]=i;
+}
+else
+{
+rt[i][j]=99;
+via[i][j]=100;
+}
+}
+}
+}
+{
+static void print_tables()
+for(int i=0;i<v;i++)
+{
+int k=i+1;
+System.out.print("Router"+k);
+for(int j=0;j<v;j++)
+System.out.print(" "+rt[i][j]+" ");
+System.out.println();
+}
+}
+} // end of class DV
